@@ -1,0 +1,38 @@
+{% load static %}
+<div class="row bg-body-tertiary border rounded-3 question">
+
+
+  <div class="row">
+    <div class="col-2 ">
+      <img class="question-avatar" src= "{% static 'img/avatar_placeholder.jpg' %}" alt="avatar">
+    </div>
+    <div class="col-10">
+
+      <div class="question-title">
+        <a href="{% url 'question' question.id%}">{{ question.title }}</a>
+      </div>
+      <div class="question-text">
+        {{ question.content}}
+      </div>
+      <div class="question-text">
+      </div>
+    </div>
+  </div>
+  <div class="row post-bottom-line">
+
+    <div class="col-2 d-flex align-items-center gap-3">
+      <h4 class="centered-h">12</h4>
+      <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
+    </div>
+    <div class="col-5 d-flex align-items-center">
+      <a href="#">answer (3)</a>
+    </div>
+    <div class="col-5 d-flex align-items-center gap-2">
+      <h5 class="centered-h">Tags: </h5>
+      <span class="badge p-2 text-bg-secondary rounded-pill ">Primary</span>
+      <span class="badge p-2 text-bg-secondary rounded-pill">Primary</span>
+      <span class="badge p-2 text-bg-secondary rounded-pill">Primary</span>
+    </div>
+  </div>
+
+</div>
