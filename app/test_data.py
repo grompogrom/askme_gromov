@@ -19,9 +19,9 @@ QUESTIONS = [{
         'tags': [random.choice(TAGS) for i in range(random.randint(1,3))]
     } for i in range(100)]
 
-IS_LOGGED = True
+IS_LOGGED = False
 BEST_MEMBERS = ['Maslove', 'Brin', 'Page', 'Musk']
-POPULAR_TAGS = [ {"name": random.choice(TAGS)} for x in range(10)]
+POPULAR_TAGS = [{"name": random.choice(TAGS)} for x in range(10)]
 
 BASE = {
     'is_logged': IS_LOGGED,

@@ -5,6 +5,7 @@ from app.tools import paginate
 
 
 def index(request):
+    BASE['is_logged'] = False
     page_items = paginate(QUESTIONS, request)
     context = {
         'questions': page_items.object_list,
@@ -16,6 +17,8 @@ def index(request):
 
 def hot(request):
     page_items = paginate(QUESTIONS[::-1], request)
+    BASE['is_logged'] = True
+
     context = {
         'questions': page_items.object_list,
         'hot': True,
