@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!--        page content-->
+<div class="row">
+  <div class="col-4">
+    <h2>New question</h2>
+  </div>
+</div>
+<div class="row bg-body-tertiary border rounded-3 question">
+  <form>
+    <div class="mb-3">
+      <label for="exampleInputTitle1" class="form-label">Title</label>
+      <input type="text" class="form-control" id="exampleInputTitle1" >
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputText1" class="form-label">Text</label>
+      <textarea  class="form-control" id="exampleInputText1" rows="8"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputTags1" class="form-label">Tags</label>
+        <input type="text" class="form-control" id="exampleInputTags1">
+    </div>
+    <button type="submit" class="btn btn-primary">Ask!</button>
+  </form>
+</div>
+{% endblock%}

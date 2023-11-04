@@ -21,17 +21,17 @@
   <div class="row post-bottom-line">
 
     <div class="col-2 d-flex align-items-center gap-3">
-      <h4 class="centered-h">12</h4>
+      <h4 class="centered-h">{{question.likes}}</h4>
       <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
     </div>
     <div class="col-5 d-flex align-items-center">
-      <a href="#">answer (3)</a>
+      <a href="#">answer ({{question.answers}})</a>
     </div>
     <div class="col-5 d-flex align-items-center gap-2">
       <h5 class="centered-h">Tags: </h5>
-      <span class="badge p-2 text-bg-secondary rounded-pill ">Primary</span>
-      <span class="badge p-2 text-bg-secondary rounded-pill">Primary</span>
-      <span class="badge p-2 text-bg-secondary rounded-pill">Primary</span>
+      {% for tag in question.tags %}
+      <span class="badge p-2 text-bg-secondary rounded-pill ">{{tag}}</span>
+      {% endfor %}
     </div>
   </div>
 

@@ -1,0 +1,21 @@
+{% load static %}
+
+<div class="col-md-4 ">
+      <div class="row justify-content-end">
+        <div class="col-sm-2">
+        <img src="{% static 'img/avatar_placeholder.jpg' %}" alt="mdo" width="48" height="48" class="rounded-circle">
+
+        </div>
+        <div class="col-sm-5">
+          alex luter
+          <div class="row">
+            <div class="col-6">
+              <a href="{% url 'settings' %}">Settings</a>
+            </div>
+            <div class="col-6">
+              <a href="#">Log out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

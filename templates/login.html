@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!--        page content-->
+<div class="row">
+  <div class="col-6">
+    <h2>Login</h2>
+  </div>
+</div>
+<div class="row bg-body-tertiary border rounded-3 question">
+  <form>
+    <div class="mb-3">
+      <label for="Login" class="form-label">Login</label>
+      <input type="email" class="form-control" id="Login" >
+    </div>
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" >
+    </div>
+
+
+    <button type="submit" class="btn btn-primary float-end">LogIn</button>
+    <div class=" spacer float-end"> </div>
+      <a href="{% url 'register' %}">
+          <div  class="btn btn-secondary float-end">SignUp</div>
+      </a>
+  </form>
+</div>
+
+{% endblock %}

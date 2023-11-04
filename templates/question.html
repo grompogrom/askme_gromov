@@ -3,157 +3,53 @@
 
 {% block content %}
 
-        <div class="row  question">
+<div class="row  question">
 
-          <div class="row">
-            <div class="col-3 ">
-              <img class="" src="{% static 'img/avatar_placeholder.jpg' %}" width="150" height="150" alt="avatar">
-            </div>
-            <div class="col-9">
+  <div class="row">
+    <div class="col-3 ">
+      <img class="" src="{% static 'img/avatar_placeholder.jpg' %}" width="150" height="150" alt="avatar">
+    </div>
+    <div class="col-9">
 
-              <div class="question-title">
-                <h2 >{{ question.title }}</h2>
-              </div>
-              <div class="question-text">
-                {{question.content}}
-              </div>
-            </div>
-          </div>
-          <div class="row post-bottom-line">
+      <div class="question-title">
+        <h2 >{{ question.title }}</h2>
+      </div>
+      <div class="question-text">
+        {{question.content}}
+      </div>
+    </div>
+  </div>
+  <div class="row post-bottom-line">
 
-            <div class="col-3 d-flex align-content-end gap-4">
-              <h3 class="centered-h">12</h3>
-              <button type="button" class="btn btn-outline-danger ">Like</button>
-            </div>
-            <div class="col-5 d-flex align-items-center gap-2">
-              <h5 class="centered-h">Tags: </h5>
-              <span class="badge p-2 text-bg-primary rounded-pill ">Primary</span>
-              <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
-              <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
-            </div>
-          </div>
+    <div class="col-3 d-flex align-content-end gap-4">
+      <h3 class="centered-h">{{question.likes}}</h3>
+      <button type="button" class="btn btn-outline-danger ">Like</button>
+    </div>
+    <div class="col-5 d-flex align-items-center gap-2">
+      <h5 class="centered-h">Tags: </h5>
+      <span class="badge p-2 text-bg-primary rounded-pill ">Primary</span>
+      <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
+      <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
+    </div>
+  </div>
 
-        </div>
-        <div class="row bg-body-tertiary border rounded-3 question">
-
-          <div class="row">
-            <div class="col-2 ">
-              <img class="question-avatar" src="{% static 'img/avatar_placeholder.jpg' %}" alt="avatar">
-            </div>
-            <div class="col-10">
-
-
-              <div class="question-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              </div>
-              <div class="question-text">
-              </div>
-            </div>
-          </div>
-          <div class="row post-bottom-line">
-
-            <div class="col-2 d-flex align-items-center gap-3">
-              <h4 class="centered-h">12</h4>
-              <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
-            </div>
-            <div class="col-9"></div>
-            <div class="col-1 d-flex align-items-center">
-                <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-                <label class="btn btn-outline-primary btn-sm" for="btncheck1">Correct</label>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="row bg-body-tertiary border rounded-3 question">
-
-          <div class="row">
-            <div class="col-2 ">
-              <img class="question-avatar" src="img/avatar_placeholder.jpg" alt="avatar">
-            </div>
-            <div class="col-10">
-
-
-              <div class="question-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              </div>
-              <div class="question-text">
-              </div>
-            </div>
-          </div>
-          <div class="row post-bottom-line">
-
-            <div class="col-2 d-flex align-items-center gap-3">
-              <h4 class="centered-h">12</h4>
-              <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
-            </div>
-            <div class="col-9"></div>
-            <div class="col-1 d-flex align-items-center">
-                <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                <label class="btn btn-outline-primary btn-sm" for="btncheck1">Correct</label>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="row bg-body-tertiary border rounded-3 question">
-
-          <div class="row">
-            <div class="col-2 ">
-              <img class="question-avatar" src="img/avatar_placeholder.jpg" alt="avatar">
-            </div>
-            <div class="col-10">
-
-
-              <div class="question-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              </div>
-              <div class="question-text">
-              </div>
-            </div>
-          </div>
-          <div class="row post-bottom-line">
-
-            <div class="col-2 d-flex align-items-center gap-3">
-              <h4 class="centered-h">12</h4>
-              <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
-            </div>
-            <div class="col-9"></div>
-            <div class="col-1 d-flex align-items-center">
-                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-                <label class="btn btn-outline-primary btn-sm" for="btncheck1">Correct</label>
-
-            </div>
-          </div>
-
-        </div>
+</div>
+{% for answer in answers %}
+{% include 'components/answer-item.html' %}
+{% endfor %}
 
 <!--        Pagination-->
-        <nav aria-label="...">
-          <ul class="pagination justify-content-end question-pagination text-bg-dark">
-            <li class="page-item disabled">
-              <a class="page-link">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-              <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
-          </ul>
-        </nav>
+{% include 'components/paginator.html' %}
 
-        <div class="row bg-body-tertiary  rounded-3 mb-3 answer-field">
-          <form>
-            <div class="mb-3">
-          <label for="exampleFormControlTextarea1" class="form-label"><h4>Write answer</h4> </label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
-        </div>
-            <div class="float-end">
-              <button type="submit" class="btn btn-primary" >Answer</button>
-            </div>
-          </form>
-        </div>
+<div class="row bg-body-tertiary  rounded-3 mb-3 answer-field">
+  <form>
+    <div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label"><h4>Write answer</h4> </label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+</div>
+    <div class="float-end">
+      <button type="submit" class="btn btn-primary" >Answer</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
