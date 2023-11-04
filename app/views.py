@@ -1,28 +1,7 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render
 
+from app.test_data import *
 from app.tools import paginate
-
-# Create your views here.
-QUESTIONS = [{
-        'id': i,
-        'title': f'Question {i}',
-        'likes': i * 2 + 1,
-        'answers': i,
-        'content': f'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        'tags': [f'tag {i} 1', f'tag {i} 3', f'tag {i} 2']
-    } for i in range(100)]
-
-IS_LOGGED = True
-BEST_MEMBERS = ['Maslove', 'Brin', 'Page', 'Musk']
-POPULAR_TAGS = [{
-    'id': i,
-    'name': f'name {i}'
-} for i in range(10)]
-BASE = {
-    'is_logged': IS_LOGGED,
-    'best_members': BEST_MEMBERS,
-    'popular_tags': POPULAR_TAGS}
 
 
 def index(request):
@@ -45,6 +24,19 @@ def hot(request):
     return render(request, 'index.html', context)
 
 
+def tag(request, tag_name):
+    result = list(filter(lambda x: tag_name.strip() in x['tags'], QUESTIONS))
+    page_items = paginate(result, request)
+    context = {
+        'questions': page_items.object_list,
+        'hot': False,
+        'page': page_items,
+        'tag': tag_name,
+        'base': BASE
+    }
+    return render(request, 'tag.html', context)
+
+
 def question(request, question_id):
     item = QUESTIONS[question_id]
     answers = [{
@@ -62,8 +54,8 @@ def question(request, question_id):
 
 
 def ask(request):
-
-    return render(request, 'ask.html', {'base': BASE})
+    title = request.GET.get('title', '1')
+    return render(request, 'ask.html', {'base': BASE, 'title': title})
 
 
 def settings(request):

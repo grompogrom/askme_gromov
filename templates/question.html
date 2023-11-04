@@ -27,9 +27,11 @@
     </div>
     <div class="col-5 d-flex align-items-center gap-2">
       <h5 class="centered-h">Tags: </h5>
-      <span class="badge p-2 text-bg-primary rounded-pill ">Primary</span>
-      <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
-      <span class="badge p-2 text-bg-primary rounded-pill">Primary</span>
+      {% for tag in question.tags %}
+      <a href="{% url 'tag' tag%}">
+      <span class="badge p-2 text-bg-primary rounded-pill " >{{tag|truncatechars:16}}</span>
+      </a>
+      {% endfor%}
     </div>
   </div>
 

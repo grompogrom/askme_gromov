@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-8">
+      <h2>Tag: {{tag}}</h2>
+  </div>
+</div>
+
+
+{% for question in questions %}
+{% include 'components/question-item.html' %}
+{% endfor %}
+<!--        Pagination-->
+{% include 'components/paginator.html' %}
+{% endblock %}

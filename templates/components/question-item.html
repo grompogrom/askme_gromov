@@ -9,10 +9,10 @@
     <div class="col-10">
 
       <div class="question-title">
-        <a href="{% url 'question' question.id%}">{{ question.title }}</a>
+        <a href="{% url 'question' question.id%}">{{ question.title|truncatechars:40 }}</a>
       </div>
       <div class="question-text">
-        {{ question.content}}
+        {{ question.content|truncatechars:210}}
       </div>
       <div class="question-text">
       </div>
@@ -30,7 +30,7 @@
     <div class="col-5 d-flex align-items-center gap-2">
       <h5 class="centered-h">Tags: </h5>
       {% for tag in question.tags %}
-      <span class="badge p-2 text-bg-secondary rounded-pill ">{{tag}}</span>
+      <span class="badge p-2 text-bg-secondary rounded-pill ">{{tag|truncatechars:8}}</span>
       {% endfor %}
     </div>
   </div>
