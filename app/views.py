@@ -1,73 +1,77 @@
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
-from app.test_data import *
-from app.tools import paginate
+from app.models import Question, Tag, Answer
+from app.tools import paginate, get_base
 
 
 def index(request):
-    BASE['is_logged'] = False
-    page_items = paginate(QUESTIONS, request)
+    questions = Question.objects.all_new()
+    page_items = paginate(questions, request)
     context = {
         'questions': page_items.object_list,
         'hot': False,
         'page': page_items,
-        'base': BASE}
-    return render(request, 'index.html',context)
+        'base': get_base()}
+    return render(request, 'index.html', context)
 
 
 def hot(request):
-    page_items = paginate(QUESTIONS[::-1], request)
-    BASE['is_logged'] = True
-
+    questions = Question.objects.all_hot()
+    page_items = paginate(questions, request)
     context = {
         'questions': page_items.object_list,
         'hot': True,
         'page': page_items,
-        'base': BASE}
+        'base': get_base()}
     return render(request, 'index.html', context)
 
 
 def tag(request, tag_name):
-    result = list(filter(lambda x: tag_name.strip() in x['tags'], QUESTIONS))
+    try:
+        tag = Tag.objects.get(name=tag_name)
+        result = tag.question_set.all()
+    except Tag.DoesNotExist:
+        return HttpResponseNotFound()
+
     page_items = paginate(result, request)
     context = {
         'questions': page_items.object_list,
-        'hot': False,
         'page': page_items,
         'tag': tag_name,
-        'base': BASE
+        'base': get_base()
     }
     return render(request, 'tag.html', context)
 
 
 def question(request, question_id):
-    item = QUESTIONS[question_id]
-    answers = [{
-        'author': f'author {i}',
-        'content': f'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore',
-        'likes_count': i * 2
-    } for i in range(100)]
+    try:
+        item = Question.objects.get(id=question_id)
+        answers = Answer.objects.filter(question=question_id)
+    except Question.DoesNotExist:
+        return HttpResponseNotFound()
+
     page_items = paginate(answers, request, 5)
     context = {
-        'question': item,
+        'question': item.as_dict(),
         'answers': page_items.object_list,
         'page': page_items,
-        'base': BASE}
+        'base': get_base()}
     return render(request, 'question.html', context)
 
 
 def ask(request):
     title = request.GET.get('title', '1')
-    return render(request, 'ask.html', {'base': BASE, 'title': title})
+    return render(request, 'ask.html', {'base': get_base(), 'title': title})
 
 
 def settings(request):
-    return render(request, 'settings.html', {'base': BASE})
+    return render(request, 'settings.html', {'base': get_base()})
 
 
 def login(request):
-    return render(request, 'login.html', {'base': BASE})
+    return render(request, 'login.html', {'base': get_base()})
 
 
 def register(request):
-    return render(request, 'register.html', {'base': BASE})
+    return render(request, 'register.html', {'base': get_base()})

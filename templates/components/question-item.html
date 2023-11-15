@@ -12,7 +12,7 @@
         <a href="{% url 'question' question.id%}">{{ question.title|truncatechars:40 }}</a>
       </div>
       <div class="question-text">
-        {{ question.content|truncatechars:210}}
+        {{ question.text|truncatechars:210}}
       </div>
       <div class="question-text">
       </div>
@@ -21,16 +21,18 @@
   <div class="row post-bottom-line">
 
     <div class="col-2 d-flex align-items-center gap-3">
-      <h4 class="centered-h">{{question.likes}}</h4>
+      <h4 class="centered-h">{{question.likes_count}}</h4>
       <button type="button" class="btn btn-outline-danger btn-sm">Like</button>
     </div>
     <div class="col-5 d-flex align-items-center">
-      <a href="#">answer ({{question.answers}})</a>
+      <a href="#">answer ({{question.get_answers_count}})</a>
     </div>
     <div class="col-5 d-flex align-items-center gap-2">
       <h5 class="centered-h">Tags: </h5>
-      {% for tag in question.tags %}
-      <span class="badge p-2 text-bg-secondary rounded-pill ">{{tag|truncatechars:8}}</span>
+      {% for tag in question.tags.all %}
+      <a href="{% url 'tag' tag.name%}">
+      <span class="badge p-2 text-bg-secondary rounded-pill ">{{tag.name|truncatechars:8}}</span>
+      </a>
       {% endfor %}
     </div>
   </div>
