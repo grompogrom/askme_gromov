@@ -3,6 +3,7 @@ import random
 from django.contrib.auth.models import User
 
 from app.models import Tag, Profile, Question, Answer, Like, BestProfile, PopularTag
+from app.tools import index_question_likes, index_answers_likes, index_popular_tags, index_best_users
 
 LONG_LOREM = ("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, "
               "totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta "
@@ -41,6 +42,10 @@ class TestDataProvider:
         self._create_questions(questions_count)
         self._create_answers(answers_count)
         self._create_likes(likes_count)
+        index_question_likes()
+        index_answers_likes()
+        index_popular_tags()
+        index_best_users()
 
     def set_callbacks(self, log_func):
         self.log_func = log_func
@@ -92,22 +97,15 @@ class TestDataProvider:
             self.answers.extend(answers)
             self.log_func(index + chunck, "answers")
 
-    def _create_likes(self, count=10):
-        likes = set()
-        for i in range(count):
-            if random.randint(0, 1) == 1:
-                question = random.choice(self.questions)
-                answer = None
-            else:
-                answer = random.choice(self.answers)
-                question = None
-
-            tmp = Like(
-                author=random.choice(self.profiles),
-                question=question,
-                answer=answer
-            )
-            likes.add(tmp)
-        Like.objects.bulk_create(likes)
-        self.likes.extend(likes)
-        self.log_func(count, "likes")
+    def _create_likes(self, count):
+        i = 0
+        for profile in self.profiles:
+            likes = []
+            i += 1
+            for question in random.choices(self.questions, k=100):
+                likes.append(Like(author=profile, question=question))
+            for answer in random.choices(self.answers, k=100):
+                likes.append(Like(author=profile, answer=answer))
+            self.likes.extend(likes)
+            Like.objects.bulk_create(likes)
+            self.log_func(200 * i, "likes")
