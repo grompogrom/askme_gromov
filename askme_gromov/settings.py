@@ -77,9 +77,17 @@ WSGI_APPLICATION = 'askme_gromov.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'test': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ask_me_db',
+        'USER': 'ask_me',
+        'PASSWORD': 'ask_me_pass',
+        'HOST': '192.168.31.33',
+        'PORT': '5432'
     }
 }
 

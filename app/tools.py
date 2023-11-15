@@ -47,17 +47,18 @@ def like_answer(author, answer: Answer):
     return like
 
 
-def calculate_likes():
-    likes = Like.objects.all()
-    for like in likes:
-        if like.question is not None:
-            question = like.question
-            question.likes_count += 1
-            question.save()
-        elif like.answer is not None:
-            answer = like.answer
-            answer.likes_count += 1
-            answer.save()
+def index_answers_likes():
+    answers = Answer.objects.annotate(total_likes=Count('like'))
+    for answer in answers:
+        answer.likes_count = answer.total_likes
+        answer.save(update_fields=['likes_count'])
+
+
+def index_question_likes():
+    questions = Question.objects.annotate(total_likes=Count('like'))
+    for question in questions:
+        question.likes_count = question.total_likes
+        question.save(update_fields=['likes_count'])
 
 
 def index_popular_tags():

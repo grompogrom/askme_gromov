@@ -39,11 +39,12 @@ class LikeManager(models.Manager):
             return self.get(author=profile, answer=answer).exists()
         return
 
+
     def like(self, author, question=None, answer=None):
         if question is not None:
-            return self.create(author=author, question=question).exists()
+            return self.create(author=author, question=question)
         elif answer is not None:
-            return self.create(author=author, answer=answer).exists()
+            return self.create(author=author, answer=answer)
         return
 
     def unlike(self, profile, question=None, answer=None):

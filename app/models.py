@@ -60,6 +60,9 @@ class Like(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True, default=None)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
+    class Meta:
+        unique_together = ('author', 'question', 'answer')
+
 
 class BestProfile(models.Model):
     updated = models.DateTimeField(auto_now_add=True)

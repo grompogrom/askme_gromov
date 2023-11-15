@@ -61,31 +61,39 @@ class TestDataProvider:
         self.log_func(count, "profiles")
 
     def _create_questions(self, count=10):
-        questions = [
-            Question(title="Question {0}".format(i),
-                     text=LONG_LOREM,
-                     author=random.choice(self.profiles))
-            for i in range(count)
-        ]
-        Question.objects.bulk_create(questions)
+        chunck = 10000
+        parts_count = int(count / chunck)
+        for i in range(parts_count):
+            index = chunck * i
+            questions = [
+                Question(title="Question {0}".format(index + i),
+                         text=LONG_LOREM,
+                         author=random.choice(self.profiles))
+                for i in range(chunck)
+            ]
+            Question.objects.bulk_create(questions)
 
-        for tmp in questions:
-            tmp.tags.add(*random.choices(self.tags, k=random.randint(1, 3)))
-        self.questions.extend(questions)
-        self.log_func(count, "questions")
+            for tmp in questions:
+                tmp.tags.add(*random.choices(self.tags, k=random.randint(1, 3)))
+            self.questions.extend(questions)
+            self.log_func(index + chunck, "questions")
 
     def _create_answers(self, count=10):
-        answers = [Answer(
-                author=random.choice(self.profiles),
-                question=random.choice(self.questions),
-                text=LONG_LOREM[:100]
-            ) for i in range(count)]
-        Answer.objects.bulk_create(answers)
-        self.answers.extend(answers)
-        self.log_func(count, "answers")
+        chunck = 100000
+        parts_count = int(count / chunck)
+        for i in range(parts_count):
+            index = chunck * i
+            answers = [Answer(
+                    author=random.choice(self.profiles),
+                    question=random.choice(self.questions),
+                    text=LONG_LOREM[:100]
+                ) for _ in range(chunck)]
+            Answer.objects.bulk_create(answers)
+            self.answers.extend(answers)
+            self.log_func(index + chunck, "answers")
 
     def _create_likes(self, count=10):
-        likes = []
+        likes = set()
         for i in range(count):
             if random.randint(0, 1) == 1:
                 question = random.choice(self.questions)
@@ -94,12 +102,12 @@ class TestDataProvider:
                 answer = random.choice(self.answers)
                 question = None
 
-            tmp = Like.objects.like(
+            tmp = Like(
                 author=random.choice(self.profiles),
                 question=question,
                 answer=answer
             )
-            likes.append(tmp)
+            likes.add(tmp)
         Like.objects.bulk_create(likes)
         self.likes.extend(likes)
         self.log_func(count, "likes")
