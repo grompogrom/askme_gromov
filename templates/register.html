@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load bootstrap5 %}
 {% block content %}
 
 <!--        page content-->
@@ -10,36 +10,20 @@
           </div>
         </div>
         <div class="row bg-body-tertiary border rounded-3 question">
-          <form>
-            <div class="mb-2 ">
-              <h6 class="text-danger">Invalid data.</h6>
-            </div>
-            <div class="mb-3">
-              <label for="Login" class="form-label">Login</label>
-              <input type="text" class="form-control" id="Login" >
-            </div>
-            <div class="mb-4">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" >
-            </div>
-              <div class="mb-4">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" >
-            </div>
-              <div class="mb-4">
-              <label for="repeat_password" class="form-label">Repeat password</label>
-              <input type="password" class="form-control" id="repeat_password" >
-            </div>
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form%}
 
 
-            <button type="submit" class="btn btn-primary float-end">SignUp</button>
-
-            <div class=" spacer float-end"> </div>
-              <a href="{% url 'login' %}">
-                  <div  class="btn btn-secondary float-end">LogIn</div>
-              </a>
-          </form>
-        </div>
+    {% buttons %}
+    <button type="submit" class="btn btn-primary float-end">SignUp</button>
+    {% endbuttons %}
+    <div class=" spacer float-end"> </div>
+      <a href="{% url 'login' %}">
+          <div  class="btn btn-secondary float-end">LogIn</div>
+      </a>
+  </form>
+</div>
 
 
 {% endblock %}

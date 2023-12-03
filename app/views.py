@@ -1,6 +1,9 @@
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 
+from app.forms import LoginForm, RegisterForm
 from app.models import Question, Tag, Answer
 from app.tools import paginate, get_base
 
@@ -12,7 +15,7 @@ def index(request):
         'questions': page_items.object_list,
         'hot': False,
         'page': page_items,
-        'base': get_base()}
+        'base': get_base(request)}
     return render(request, 'index.html', context)
 
 
@@ -23,7 +26,7 @@ def hot(request):
         'questions': page_items.object_list,
         'hot': True,
         'page': page_items,
-        'base': get_base()}
+        'base': get_base(request)}
     return render(request, 'index.html', context)
 
 
@@ -39,7 +42,7 @@ def tag(request, tag_name):
         'questions': page_items.object_list,
         'page': page_items,
         'tag': tag_name,
-        'base': get_base()
+        'base': get_base(request)
     }
     return render(request, 'tag.html', context)
 
@@ -56,22 +59,55 @@ def question(request, question_id):
         'question': item.as_dict(),
         'answers': page_items.object_list,
         'page': page_items,
-        'base': get_base()}
+        'base': get_base(request)}
     return render(request, 'question.html', context)
 
 
 def ask(request):
     title = request.GET.get('title', '1')
-    return render(request, 'ask.html', {'base': get_base(), 'title': title})
+    return render(request, 'ask.html', {'base': get_base(request), 'title': title})
 
 
 def settings(request):
-    return render(request, 'settings.html', {'base': get_base()})
+    return render(request, 'settings.html', {'base': get_base(request)})
 
 
-def login(request):
-    return render(request, 'login.html', {'base': get_base()})
+def signin(request):
+    # fixme extract
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = authenticate(request, **login_form.cleaned_data)
+            if user is not None:
+                login(request, user)
+                return redirect(reverse('index'))
+            else:
+                login_form.add_error(None, 'Wrong login or password')
+
+    elif request.method == 'GET':
+        login_form = LoginForm()
+    return render(request, 'login.html', {'base': get_base(request), 'form': login_form})
 
 
 def register(request):
-    return render(request, 'register.html', {'base': get_base()})
+    if request.method == 'GET':
+        register_form = RegisterForm()
+    elif request.method == "POST":
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            user = register_form.save()
+            if user:
+                login(request, user)
+                return redirect(reverse('index'))
+            else:
+                register_form.add_error(None, 'User saving error!')
+    return render(request, 'register.html', {
+        'base': get_base(request),
+        'form': register_form
+    })
+
+
+def log_out(request):
+    # if request.method == 'POST':
+    logout(request)
+    return redirect(reverse('index'))

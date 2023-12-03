@@ -7,13 +7,13 @@
 
         </div>
         <div class="col-sm-5">
-          {{base.profile.user.username}}
+          {{base.user.username}}
           <div class="row">
             <div class="col-4">
               <a href="{% url 'settings' %}">Settings</a>
             </div>
             <div class="col-4">
-              <a href="#">Log out</a>
+              <a href="{% url 'logout' %}">Log out</a>
             </div>
           </div>
         </div>

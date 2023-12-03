@@ -20,15 +20,20 @@ def paginate(objects, request, per_page=15):
     return paginator.page(1)
 
 
-def get_base():
+def get_base(request):
+    is_logged = request.user.is_authenticated
+    user_meta = None
+    if is_logged:
+        user_meta = request.user
     best_members = BestProfile.objects.all()
     best_members = list(map(lambda x: x.profile.user.username, best_members))
     popular_tags = PopularTag.objects.all()
     popular_tags = list(map(lambda x: x.tag, popular_tags))
     return {
-    'is_logged': False,
-    'best_members': best_members,
-    'popular_tags': popular_tags}
+        'is_logged': is_logged,
+        'user': user_meta,
+        'best_members': best_members,
+        'popular_tags': popular_tags}
 
 
 def like_question(author, question: Question):
@@ -51,14 +56,14 @@ def index_answers_likes():
     answers = Answer.objects.annotate(total_likes=Count('like'))
     for answer in answers:
         answer.likes_count = answer.total_likes
-        answer.save(update_fields=['likes_count'])
+        answer.save()
 
 
 def index_question_likes():
     questions = Question.objects.annotate(total_likes=Count('like'))
     for question in questions:
         question.likes_count = question.total_likes
-        question.save(update_fields=['likes_count'])
+        question.save()
 
 
 def index_popular_tags():
@@ -85,4 +90,3 @@ def index_best_users():
     best_profiles = list(map(lambda x: BestProfile(profile=x), profiles[:10]))
 
     BestProfile.objects.bulk_create(best_profiles)
-
