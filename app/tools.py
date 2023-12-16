@@ -1,4 +1,7 @@
 from datetime import timedelta
+from urllib.parse import urlencode
+
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 
 from django.core.paginator import Paginator, EmptyPage
@@ -6,22 +9,29 @@ from django.db.models import Count, OuterRef, Sum, Subquery
 from django.db.models.functions import Coalesce
 
 from app.models import Like, Answer, Question, Tag, PopularTag, Profile, BestProfile
+from askme_gromov import settings
 
 
 def paginate(objects, request, per_page=15):
     paginator = Paginator(objects, per_page)
+    last_page_number = paginator.num_pages
     try:
-        page = int(request.GET.get('page', 1))
+        page = request.GET.get('page', 1)
+        if page == 'last':
+            return paginator.page(last_page_number)
+        else:
+            page = int(page)
         return paginator.page(page)
     except EmptyPage:
         pass
     except ValueError:
         pass
-    return paginator.page(1)
+    return paginator.page(last_page_number)
 
 
 def get_base(request):
     is_logged = request.user.is_authenticated
+    ful_url = request.get_full_path()
     user_meta = None
     if is_logged:
         user_meta = request.user
@@ -32,8 +42,12 @@ def get_base(request):
     return {
         'is_logged': is_logged,
         'user': user_meta,
+        'MEDIA_URL': settings.MEDIA_URL,
         'best_members': best_members,
-        'popular_tags': popular_tags}
+        'popular_tags': popular_tags,
+        'continue': ful_url
+    }
+
 
 
 def like_question(author, question: Question):

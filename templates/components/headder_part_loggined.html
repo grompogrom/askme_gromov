@@ -3,7 +3,11 @@
 <div class="col-md-4 ">
       <div class="row justify-content-end">
         <div class="col-sm-2">
-        <img src="{% static 'img/avatar_placeholder.jpg' %}" alt="mdo" width="48" height="48" class="rounded-circle">
+          {%if request.user.profile.avatar%}
+                <img src="{{base.MEDIA_URL}}{{request.user.profile.avatar}}" alt="avatar" width="48" height="48" class="rounded-circle">
+          {%else%}
+                <img src="{% static 'img/avatar_placeholder.jpg' %}" alt="avatar" width="48" height="48" class="rounded-circle">
+          {%endif%}
 
         </div>
         <div class="col-sm-5">
@@ -13,7 +17,7 @@
               <a href="{% url 'settings' %}">Settings</a>
             </div>
             <div class="col-4">
-              <a href="{% url 'logout' %}">Log out</a>
+              <a href="{% url 'logout' %}?continue={{base.continue}}">Log out</a>
             </div>
           </div>
         </div>
