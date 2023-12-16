@@ -13,7 +13,7 @@
               <a href="{% url 'settings' %}">Settings</a>
             </div>
             <div class="col-4">
-              <a href="{% url 'logout' %}">Log out</a>
+              <a href="{% url 'logout' %}?continue={{base.continue}}">Log out</a>
             </div>
           </div>
         </div>

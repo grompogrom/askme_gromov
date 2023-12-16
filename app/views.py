@@ -1,14 +1,18 @@
+from urllib.parse import urlencode
+
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseNotFound
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, ProfileForm, QuestionForm, AnswerForm
 from app.models import Question, Tag, Answer
 from app.tools import paginate, get_base
 
 
 def index(request):
+
     questions = Question.objects.all_new()
     page_items = paginate(questions, request)
     context = {
@@ -54,33 +58,66 @@ def question(request, question_id):
     except Question.DoesNotExist:
         return HttpResponseNotFound()
 
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        form = AnswerForm(request.user, question_id,request.POST)
+        if form.is_valid():
+            answer = form
+            answer.save()
+
+            url = reverse('question', args=(question_id,))
+            query_string = urlencode({'page': 'last'})
+            return HttpResponseRedirect(url + '?' + query_string + '#bottom')
+    else:
+        form = AnswerForm(request.user,question_id)
+
     page_items = paginate(answers, request, 5)
     context = {
         'question': item.as_dict(),
         'answers': page_items.object_list,
         'page': page_items,
+        'form': form,
         'base': get_base(request)}
     return render(request, 'question.html', context)
 
 
+@login_required(login_url='login', redirect_field_name='continue')
 def ask(request):
-    title = request.GET.get('title', '1')
-    return render(request, 'ask.html', {'base': get_base(request), 'title': title})
+
+    if request.method == 'POST':
+        form = QuestionForm(request.user, request.POST)
+        if form.is_valid():
+            question = form.save()
+            return redirect(reverse('question', args=(question.id,)))
+    else:
+        form = QuestionForm(request.user)
+
+    return render(request, 'ask.html', {'base': get_base(request), 'form': form})
 
 
+@login_required(login_url='login', redirect_field_name='continue')
 def settings(request):
-    return render(request, 'settings.html', {'base': get_base(request)})
+    if request.method == 'POST':
+        form = ProfileForm(request.user, request.POST, request.FILES)
+        if form.is_valid():
+            profile = form.save()
+    else:
+        form = ProfileForm(user=request.user)
+    return render(request, 'settings.html', {'base': get_base(request), 'form': form})
 
 
 def signin(request):
+
     # fixme extract
     if request.method == 'POST':
+        origin_url = request.GET.get('continue', 'index')
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             user = authenticate(request, **login_form.cleaned_data)
             if user is not None:
                 login(request, user)
-                return redirect(reverse('index'))
+                return redirect(origin_url)
             else:
                 login_form.add_error(None, 'Wrong login or password')
 
@@ -108,6 +145,6 @@ def register(request):
 
 
 def log_out(request):
-    # if request.method == 'POST':
+    origin_url = request.GET.get('continue', 'index')
     logout(request)
-    return redirect(reverse('index'))
+    return redirect(origin_url)

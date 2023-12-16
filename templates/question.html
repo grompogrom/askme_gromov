@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
 
@@ -43,15 +44,13 @@
 <!--        Pagination-->
 {% include 'components/paginator.html' %}
 
-<div class="row bg-body-tertiary  rounded-3 mb-3 answer-field">
-  <form>
-    <div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label"><h4>Write answer</h4> </label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
-</div>
-    <div class="float-end">
-      <button type="submit" class="btn btn-primary" >Answer</button>
-    </div>
+<div class="row bg-body-tertiary  rounded-3 mb-3 answer-field" id="bottom ">
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary float-end">Answer</button>
+    {% endbuttons %}
   </form>
 </div>
 {% endblock %}
